@@ -3,6 +3,9 @@ This reproduces the PDP Screenhack "Munching Squares" for Pebble
 This eats tons of battery because it does a lot of screen updates 
 ten times per second. So let the user beware.
 
+I'm not sure why it always draws white on black. I'm fairly sure it should 
+switch to black on white. This is on the list of things to debug.
+
 http://en.wikipedia.org/wiki/Munching_square
 
 Hat tip to jwz for the Xscreensaver module that inspired this
