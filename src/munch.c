@@ -10,11 +10,12 @@
 PBL_APP_INFO(MY_UUID, "Munching Squares", "Amy Wilhelm", 0, 2, DEFAULT_MENU_ICON, APP_INFO_STANDARD_APP);
 
 Window window;
-Layer display_layer;
+Layer munch_layer;
+Layer frame_layer;
 GColor draw_color = GColorWhite;
 int munch_t = MUNCH_T_MIN;
 
-void update_layer(Layer *layer, GContext *ctx) {
+void update_munch(Layer *layer, GContext *ctx) {
   (void)layer;
 
   graphics_context_set_fill_color(ctx, draw_color);
@@ -38,11 +39,19 @@ void update_layer(Layer *layer, GContext *ctx) {
   }
 }
 
+void update_frame(Layer *layer, GContext *ctx) {
+
+  graphics_context_set_fill_color(ctx,GColorWhite);
+  
+  graphics_draw_rect(ctx, GRect(0,0,68,68));
+
+}
+
 void handle_timer(AppContextRef app, AppTimerHandle timer, uint32_t cookie){
   (void)timer;
   if (cookie != UPDATE_TIMER_COOKIE){ return; }
   
-  layer_mark_dirty(&display_layer);
+  layer_mark_dirty(&munch_layer);
   app_timer_send_event(app, 100, UPDATE_TIMER_COOKIE);
 }
 
@@ -50,10 +59,17 @@ void handle_init(AppContextRef app) {
   window_init(&window, "Munching Squares");
   window_stack_push(&window, true /* Animated */);
   window_set_background_color(&window,GColorBlack);
+	
+  int topcorner = window.layer.frame.size.w/2-34;
 
-  layer_init(&display_layer, window.layer.frame);
-  display_layer.update_proc = &update_layer;
-  layer_add_child(&window.layer, &display_layer);
+  layer_init(&frame_layer, GRect(topcorner,28,68,68));
+  frame_layer.update_proc = &update_frame;
+  layer_add_child(&window.layer, &frame_layer);
+  layer_mark_dirty(&frame_layer);
+	
+  layer_init(&munch_layer, GRect(2,2,64,64));
+  munch_layer.update_proc = &update_munch;
+  layer_add_child(&frame_layer, &munch_layer);
   app_timer_send_event(app, 100, UPDATE_TIMER_COOKIE);
 
 }
