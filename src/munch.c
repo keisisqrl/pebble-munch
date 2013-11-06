@@ -3,11 +3,10 @@
 #include "pebble_app.h"
 
 #define V_RES 168
-#define H_RES 144
+#define H_RES 64
 #define UPDATE_TIMER_COOKIE 12443
 #define MUNCH_T_MIN 1
 
-//! Generate your own UUID using `uuidgen` and replace it:
 #define MY_UUID { 0x1e, 0xdd, 0x14, 0x70, 0xb6, 0x53, 0x4c, 0x13, 0x86, 0xe8, 0xfb, 0x9a, 0x2a, 0x78, 0xb5, 0x8d }
 PBL_APP_INFO(MY_UUID, "Munching Squares", "Amy Wilhelm", 0, 2, DEFAULT_MENU_ICON, APP_INFO_STANDARD_APP);
 
