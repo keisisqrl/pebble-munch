@@ -2,7 +2,6 @@
 #include "pebble_os.h"
 #include "pebble_app.h"
 
-#define V_RES 168
 #define H_RES 64
 #define UPDATE_TIMER_COOKIE 12443
 #define MUNCH_T_MIN 1
@@ -36,8 +35,6 @@ void update_layer(Layer *layer, GContext *ctx) {
 
   if (munch_t > H_RES){
     munch_t = MUNCH_T_MIN;
-    GColor next_color = draw_color == GColorWhite ? GColorBlack : GColorWhite;
-    draw_color = next_color;
   }
 }
 
