@@ -26,6 +26,10 @@ void update_munch(Layer *layer, GContext *ctx) {
 
   GPoint cur_point;
   int munch_t;
+
+  // These look like weird intervals, because they are.
+  // They're chosen so that 15, 30, and 45 seconds all look interesting
+  // Not just 59 and 0
   
   if (now_sec < 10){
     munch_t = now_sec;
@@ -41,9 +45,7 @@ void update_munch(Layer *layer, GContext *ctx) {
     munch_t = now_sec + 5;
   };
 
-  //snprintf(time_str_buffer, TIME_STR_BUFFER_BYTES, "%n %n", &now_sec, &munch_t);
-  //text_layer_set_text(&time_layer, time_str_buffer);
-  
+  // The immortal Munching Square screenhack  
 
   for (int x = 1; x <= MUNCH_MAX; x++){
     for (int y = 1; y <= MUNCH_MAX; y++){
@@ -55,13 +57,9 @@ void update_munch(Layer *layer, GContext *ctx) {
     }
   }
 
-  //munch_t++;
-
-  //if (munch_t > MUNCH_MAX){
-  //  munch_t = 1;
-  //}
 }
 
+// Draws the frame around the Munching Square
 void update_frame(Layer *layer, GContext *ctx) {
 
   graphics_context_set_fill_color(ctx,GColorWhite);
@@ -70,35 +68,25 @@ void update_frame(Layer *layer, GContext *ctx) {
 
 }
 
-/* No longer used
 
-void handle_timer(AppContextRef app, AppTimerHandle timer, uint32_t cookie){
-  (void)timer;
-  if (cookie != UPDATE_TIMER_COOKIE){ return; }
-  
-  layer_mark_dirty(&munch_layer);
-  app_timer_send_event(app, 100, UPDATE_TIMER_COOKIE);
-}
-*/
-
-void update_screen(PblTm *now) {
+// Initializes the screen 
+void init_screen(PblTm *now) {
   string_format_time(time_str_buffer, TIME_STR_BUFFER_BYTES,"%I:%M:%S %p", now);
   text_layer_set_text(&time_layer, time_str_buffer);
+  now_sec = now->tm_sec;
   layer_mark_dirty(&munch_layer);
 }
 
+// Updates the time every second, stores the second count for update_munch to chew on
 void handle_tick(AppContextRef app, PebbleTickEvent *event) {
   (void)app;
   string_format_time(time_str_buffer, TIME_STR_BUFFER_BYTES,"%I:%M:%S %p", event->tick_time);
   text_layer_set_text(&time_layer, time_str_buffer);
-
   now_sec = event->tick_time->tm_sec;
-	
-  //layer_mark_dirty(&munch_layer);
 }
 
 
-
+// Initialization
 void handle_init(AppContextRef app) {
   window_init(&window, "Munching Squares");
   window_stack_push(&window, true /* Animated */);
@@ -114,7 +102,6 @@ void handle_init(AppContextRef app) {
   layer_init(&munch_layer, GRect(1,1,64,64));
   munch_layer.update_proc = &update_munch;
   layer_add_child(&frame_layer, &munch_layer);
-  //app_timer_send_event(app, 100, UPDATE_TIMER_COOKIE);
 
   GRect timepos = GRect(0,window.layer.frame.size.h-50,
 						window.layer.frame.size.w,50);
@@ -125,17 +112,16 @@ void handle_init(AppContextRef app) {
   text_layer_set_font(&time_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD));
   layer_add_child(&window.layer, &time_layer.layer);
   
-
+  init_screen(get_time());
 }
 
 void pbl_main(void *params) {
   PebbleAppHandlers handlers = {
     .init_handler = &handle_init,
-	.tick_info = {
-	    .tick_handler = &handle_tick,
-		.tick_units = SECOND_UNIT
-	}
-    // .timer_handler = &handle_timer 
+    .tick_info = {
+      .tick_handler = &handle_tick,
+      .tick_units = SECOND_UNIT
+    }
   };
   app_event_loop(params, &handlers);
 }
