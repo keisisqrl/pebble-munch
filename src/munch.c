@@ -71,7 +71,7 @@ void update_frame(Layer *layer, GContext *ctx) {
 
 // Initializes the screen 
 void init_screen(PblTm *now) {
-  string_format_time(time_str_buffer, TIME_STR_BUFFER_BYTES,"%I:%M:%S %p", now);
+  string_format_time(time_str_buffer, TIME_STR_BUFFER_BYTES,"%H:%M:%S", now);
   text_layer_set_text(&time_layer, time_str_buffer);
   now_sec = now->tm_sec;
   layer_mark_dirty(&munch_layer);
