@@ -80,9 +80,7 @@ void init_screen(PblTm *now) {
 // Updates the time every second, stores the second count for update_munch to chew on
 void handle_tick(AppContextRef app, PebbleTickEvent *event) {
   (void)app;
-  string_format_time(time_str_buffer, TIME_STR_BUFFER_BYTES,"%I:%M:%S %p", event->tick_time);
-  text_layer_set_text(&time_layer, time_str_buffer);
-  now_sec = event->tick_time->tm_sec;
+  init_screen(event->tick_time);
 }
 
 
