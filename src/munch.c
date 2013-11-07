@@ -112,7 +112,9 @@ void handle_init(AppContextRef app) {
   text_layer_set_font(&time_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD));
   layer_add_child(&window.layer, &time_layer.layer);
   
-  init_screen(get_time());
+  PblTm init_time;
+  get_time(&init_time);
+  init_screen(&init_time);
 }
 
 void pbl_main(void *params) {
